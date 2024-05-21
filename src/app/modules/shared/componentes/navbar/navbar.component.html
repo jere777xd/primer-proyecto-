@@ -3,12 +3,27 @@
       <mat-icon>menu</mat-icon>
     </button>
     <span>My App</span>
+
+    //menu desplegable
+    <button mat-button [matMenuTriggerFor]="menu">productos</button>
+    <mat-menu #menu="matMenu">
+     <button mat-menu-item>Item 1</button>
+     <button mat-menu-item>Item 2</button>
+    </mat-menu>
+
     <span class="example-spacer"></span>
+    
+    //inicio de sesion y registro de nuevo usuario
+    <button mat-button [matMenuTriggerFor]="usuario"><mat-icon>person</mat-icon></button>
+    <mat-menu #menu="matMenu">
+     <button mat-menu-item routerLink="/registro">Registrarse</button>
+     <button mat-menu-item routerLink="/inicio-sesion">Iniciar Sesion</button>
+    </mat-menu>
+
+    //carrito
     <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>favorite</mat-icon>
     </button>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-      <mat-icon>share</mat-icon>
-    </button>
+    
   </mat-toolbar>
   

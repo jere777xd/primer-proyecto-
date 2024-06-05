@@ -17,7 +17,8 @@ import {MatCardModule} from '@angular/material/card';
 @NgModule({
   declarations: [
     InicioComponent,
-    CardComponent
+    CardComponent,
+    
   ],
   imports: [
     CommonModule,

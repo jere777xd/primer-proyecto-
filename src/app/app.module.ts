@@ -8,13 +8,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //COMPONENTES GLOBALES
 import { SharedModule  } from './modules/shared/shared.module';
-import { RegistroComponent } from './modules/autentificacion/pages/registro/registro.component';
-
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegistroComponent,
     
   ],
   imports: [

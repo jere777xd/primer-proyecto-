@@ -12,7 +12,7 @@ export class IniciosesionComponent {
   //definimos coleccion local de usuarios
   public coleccionUsuariosLocales: Usuario[];
 
-  constructor(){
+  constructor() {
     this.coleccionUsuariosLocales = [
       {
         uid: '',
@@ -55,7 +55,7 @@ export class IniciosesionComponent {
 
 
   // funcion para iniciar sesion
-  iniciarSesion(){
+  iniciarSesion() {
     // recibe la informacion ingresada desde el navegador
     const credenciales = {
       uid: this.usuarios.uid,
@@ -66,16 +66,39 @@ export class IniciosesionComponent {
       password: this.usuarios.password
     }
     // repetitiva para recorrer la coleccion de ususarios locales
-    for(let i = 0; i < this.coleccionUsuariosLocales.length; i++){
-    // usuariosLocal corresponde a esa posicion en especifico
-    const usuarioLocal = this.coleccionUsuariosLocales[i];
+    for (let i = 0; i < this.coleccionUsuariosLocales.length; i++){
+      // usuariosLocal corresponde a esa posicion en especifico
+      const usuarioLocal = this.coleccionUsuariosLocales[i];
 
-    // condicional para verificar la existencia del usuario ingresado
-    if(usuarioLocal.nombre === )
-
+      // condicional para verificar la existencia del usuario ingresado
+      if (usuarioLocal.nombre === credenciales.nombre &&
+        usuarioLocal.apellido === credenciales.apellido &&
+        usuarioLocal.email === credenciales.email &&
+        usuarioLocal.rol === credenciales.rol &&
+        usuarioLocal.password === credenciales.password){
+          //notificampos al usuario que pudo ingresar
+          alert("Ingresaste con exito");
+          //paramos la funcion
+          break;
+        } else{
+          alert("Ocurrio un problema al iniciar sesion");
+          break;
+        }
+    }
+    this.limpiarInputs();
   }
-  } 
+  //#################################################### FIN INGRESADO
+  limpiarInputs() {
+    const inputs = {
+      uid: this.usuarios.uid = '',
+      nombre: this.usuarios.nombre = '',
+      apellido: this.usuarios.apellido = '',
+      email: this.usuarios.email = '',
+      rol: this.usuarios.rol = '',
+      password: this.usuarios.password = ''
+    }
+  }
 
-  
+
 
 }

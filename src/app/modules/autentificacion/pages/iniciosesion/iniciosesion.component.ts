@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { Usuario } from 'src/app/models/usuario';
 
+import { AuthService } from '../../services/auth.service';
+import { FirestoreService } from 'src/app/modules/shared/services/firestore.service';
+import { Router } from '@angular/router';
+
+
 @Component({
   selector: 'app-iniciosesion',
   templateUrl: './iniciosesion.component.html',
@@ -10,7 +15,7 @@ export class IniciosesionComponent {
   hide = true;
   //#################### LOCAL
   //definimos coleccion local de usuarios
-  public coleccionUsuariosLocales: Usuario[];
+  /*   public coleccionUsuariosLocales: Usuario[];
 
   constructor() {
     this.coleccionUsuariosLocales = [
@@ -39,8 +44,15 @@ export class IniciosesionComponent {
         password: ''
       }
     ]
-  }
+  } */
   //###################################### FIN LOCAL
+
+  constructor(
+    public servicioAuth: AuthService,
+    public servicioFirestore: FirestoreService,
+    public servicioRutas: Router
+  ){}
+
 
   //###################################### INGRESADO
   //definimos laintefaz de usuario 
@@ -55,8 +67,8 @@ export class IniciosesionComponent {
 
 
   // funcion para iniciar sesion
-  iniciarSesion() {
-    // recibe la informacion ingresada desde el navegador
+  async iniciarSesion() {
+   /*  // recibe la informacion ingresada desde el navegador
     const credenciales = {
       uid: this.usuarios.uid,
       nombre: this.usuarios.nombre,
@@ -84,7 +96,26 @@ export class IniciosesionComponent {
           alert("Ocurrio un problema al iniciar sesion");
           break;
         }
+    } */
+    
+    const credenciales = {
+      email: this.usuarios.email,
+      password: this.usuarios.password
     }
+
+    const res = await this.servicioAuth.iniciarSesion(credenciales.email, credenciales.password)
+    .then(res => {
+      alert('¡Se pudo ingresar con exito!');
+
+      this.servicioRutas.navigate(['/inicio']);
+    })
+    .catch(err=>{
+      alert('Hubo un problema');
+
+      this.limpiarInputs();
+    })
+
+
     this.limpiarInputs();
   }
   //#################################################### FIN INGRESADO

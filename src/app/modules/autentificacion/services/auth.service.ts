@@ -28,4 +28,17 @@ export class AuthService {
 
 
   //FUNCION PARA TOMAR EL UID
+  async obtenerUid(){
+    //nos va a generar una promesa y la constante la va capturar
+    const user = await this.auth.currentUser;
+    
+    /*si el usuaroio no respeta la estructura de la interfaz /
+    si tuvo problemas para el registro -> ej.: mal internet
+    */
+    if(user == null){
+      return null;
+    } else{
+      return user.uid;
+    }
+  }
 }

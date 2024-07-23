@@ -7,6 +7,9 @@ import { FirestoreService } from 'src/app/modules/shared/services/firestore.serv
 //impotamos componentes de rutas de angular
 import { Router } from '@angular/router';
 
+// importamos paqueteria de incriptacion
+import * as CryptoJS from 'crypto-js';
+
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
@@ -75,6 +78,14 @@ export class RegistroComponent {
     this.usuarios.uid = uid;
 
     //llamamos a la funcion guardUsuario()
+
+    /**
+     * SHA es un algoritmo de hash seguro que toa una entrada (en este caso la contraseña)
+     * y produce una cadena de caracteres HEXADECIMAL que va a representar a u hash
+     * toString: convierte el resultado en la cadena de caracteres legible 
+     */
+    this.usuarios.password = CryptoJS.SHA256(this.usuarios.password).toString();
+
     this.guardarUsuario();
     
 

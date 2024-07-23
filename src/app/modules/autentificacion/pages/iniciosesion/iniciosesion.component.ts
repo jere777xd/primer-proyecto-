@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { Usuario } from 'src/app/models/usuario';
-
 import { AuthService } from '../../services/auth.service';
 import { FirestoreService } from 'src/app/modules/shared/services/firestore.service';
 import { Router } from '@angular/router';
-
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-iniciosesion',
@@ -13,49 +12,49 @@ import { Router } from '@angular/router';
 })
 export class IniciosesionComponent {
   hide = true;
-  //#################### LOCAL
-  //definimos coleccion local de usuarios
-  /*   public coleccionUsuariosLocales: Usuario[];
+  // ############################# LOCAL
+  // Definimos colección local de usuarios
+  /*
+  public coleccionUsuariosLocales: Usuario[];
 
-  constructor() {
+  constructor(){
     this.coleccionUsuariosLocales = [
       {
         uid: '',
-        nombre: '',
-        apellido: '',
-        email: '',
-        rol: '',
-        password: ''
+        nombre: 'Santiago',
+        apellido: 'Nuñez',
+        email: 'santinuñez@gmail.com',
+        rol: 'admin',
+        password: '123456'
       },
       {
         uid: '',
-        nombre: '',
-        apellido: '',
-        email: '',
-        rol: '',
-        password: ''
+        nombre: 'Juan',
+        apellido: 'Perez',
+        email: 'juanperez@gmail.com',
+        rol: 'vis',
+        password: 'abc123'
       },
       {
         uid: '',
-        nombre: '',
-        apellido: '',
-        email: '',
-        rol: '',
-        password: ''
+        nombre: 'Thalia',
+        apellido: 'Rosales',
+        email: 'thaliarosales@gmail.com',
+        rol: 'vis',
+        password: 'abcdef'
       }
     ]
-  } */
-  //###################################### FIN LOCAL
+  }*/
+  // ############################# FIN LOCAL
 
   constructor(
     public servicioAuth: AuthService,
     public servicioFirestore: FirestoreService,
     public servicioRutas: Router
-  ){}
+  ) { }
 
-
-  //###################################### INGRESADO
-  //definimos laintefaz de usuario 
+  // ############################# INGRESADO
+  // Definimos la interfaz de usuario
   usuarios: Usuario = {
     uid: '',
     nombre: '',
@@ -65,10 +64,10 @@ export class IniciosesionComponent {
     password: ''
   }
 
-
-  // funcion para iniciar sesion
+  // Función para iniciar sesión
   async iniciarSesion() {
-   /*  // recibe la informacion ingresada desde el navegador
+    // Recibe la información ingresada desde el navegador
+    /*
     const credenciales = {
       uid: this.usuarios.uid,
       nombre: this.usuarios.nombre,
@@ -76,60 +75,88 @@ export class IniciosesionComponent {
       email: this.usuarios.email,
       rol: this.usuarios.rol,
       password: this.usuarios.password
-    }
-    // repetitiva para recorrer la coleccion de ususarios locales
-    for (let i = 0; i < this.coleccionUsuariosLocales.length; i++){
-      // usuariosLocal corresponde a esa posicion en especifico
+    
+
+    // Repetitiva para recorrer la colección de usuarios locales
+    for(let i = 0; i < this.coleccionUsuariosLocales.length; i++){
+      // usuarioLocal corresponde a esa posición en específico
       const usuarioLocal = this.coleccionUsuariosLocales[i];
 
-      // condicional para verificar la existencia del usuario ingresado
-      if (usuarioLocal.nombre === credenciales.nombre &&
-        usuarioLocal.apellido === credenciales.apellido &&
-        usuarioLocal.email === credenciales.email &&
-        usuarioLocal.rol === credenciales.rol &&
+      // Condicional para verificar la existencia del usuario ingresado
+      if(usuarioLocal.nombre === credenciales.nombre && 
+        usuarioLocal.apellido === credenciales.apellido && 
+        usuarioLocal.email === credenciales.email && 
+        usuarioLocal.rol === credenciales.rol && 
         usuarioLocal.password === credenciales.password){
-          //notificampos al usuario que pudo ingresar
-          alert("Ingresaste con exito");
-          //paramos la funcion
+          // Notificamos al usuario que pudo ingresar
+          alert("¡Ingresaste con éxito! :)");
+          // Paramos a la función
           break;
-        } else{
-          alert("Ocurrio un problema al iniciar sesion");
+        } else {
+          alert("Ocurrió un problema al iniciar sesión :(");
           break;
         }
-    } */
-    
+    }*/
+
     const credenciales = {
       email: this.usuarios.email,
       password: this.usuarios.password
     }
 
-    const res = await this.servicioAuth.iniciarSesion(credenciales.email, credenciales.password)
-    .then(res => {
-      alert('¡Se pudo ingresar con exito!');
+    try {
+      // obtenemos usuario de la Base de Datos
+      const usuarioBD = await this.servicioAuth.obtenerUsuario(credenciales.email);
 
-      this.servicioRutas.navigate(['/inicio']);
-    })
-    .catch(err=>{
-      alert('Hubo un problema');
+      // Condicional verificada que ese usuario de la BD existiera o que sea igual al de nuestra colección
+      if (!usuarioBD || usuarioBD.empty) {
+        alert("Correo electrónico no registrado");
+        this.limpiarInputs();
+        return;
+      }
 
+      // Vinculaba al primer documento de la colección "usuarios" que se obtenía desde la BD
+      const usuarioDoc = usuarioBD.docs[0];
+
+      /*
+        Extrae los datos del documento en forma de "objeto" y se específica que va a ser del 
+        tipo "Usuario" (se refiere a la interfaz Usuario de nuestros modelos)
+      */
+      const usuarioData = usuarioDoc.data() as Usuario;
+
+      // Encripta la contraseña que el usuario envía mediante "Iniciar Sesión"
+      const hashedPassword = CryptoJS.SHA256(credenciales.password).toString();
+
+      /*
+        Condicional que compara la contraseña que acabamos de encriptar y que el usurio 
+        envío con la que recibimos del "usuarioData"
+      */
+      if (hashedPassword !== usuarioData.password) {
+        alert("Contraseña incorrecta");
+
+        this.usuarios.password = '';
+        return;
+      }
+
+      const res = await this.servicioAuth.iniciarSesion(credenciales.email, credenciales.password)
+        .then(res => {
+          alert('¡Se pudo ingresar con éxito :)!');
+
+          this.servicioRutas.navigate(['/inicio']);
+        })
+        .catch(err => {
+          alert('Hubo un problema al iniciar sesión :( ' + err);
+
+          this.limpiarInputs();
+        })
+    } catch(error){
       this.limpiarInputs();
-    })
-
-
-    this.limpiarInputs();
-  }
-  //#################################################### FIN INGRESADO
-  limpiarInputs() {
-    const inputs = {
-      uid: this.usuarios.uid = '',
-      nombre: this.usuarios.nombre = '',
-      apellido: this.usuarios.apellido = '',
-      email: this.usuarios.email = '',
-      rol: this.usuarios.rol = '',
-      password: this.usuarios.password = ''
     }
   }
 
-
-
+  limpiarInputs() {
+    const inputs = {
+      email: this.usuarios.email = '',
+      password: this.usuarios.password = ''
+    }
+  }
 }

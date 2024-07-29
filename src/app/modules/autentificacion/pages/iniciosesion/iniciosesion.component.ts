@@ -4,6 +4,8 @@ import { AuthService } from '../../services/auth.service';
 import { FirestoreService } from 'src/app/modules/shared/services/firestore.service';
 import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
+//paqueteria de alertas personalizadas 
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-iniciosesion',
@@ -131,7 +133,11 @@ export class IniciosesionComponent {
         envío con la que recibimos del "usuarioData"
       */
       if (hashedPassword !== usuarioData.password) {
-        alert("Contraseña incorrecta");
+        Swal.fire({
+          title: "ocurrio un problema!",
+          text: "la contraseña es incorrecta",
+          icon: "success"
+        });
 
         this.usuarios.password = '';
         return;
@@ -139,12 +145,20 @@ export class IniciosesionComponent {
 
       const res = await this.servicioAuth.iniciarSesion(credenciales.email, credenciales.password)
         .then(res => {
-          alert('¡Se pudo ingresar con éxito :)!');
+          Swal.fire({
+            title: "Good job!",
+            text: "se pudo ingresar con exito!",
+            icon: "success"
+          });
 
           this.servicioRutas.navigate(['/inicio']);
         })
         .catch(err => {
-          alert('Hubo un problema al iniciar sesión :( ' + err);
+          Swal.fire({
+            title: "ocurrio un error!",
+            text: "hubo un problema al iniciar sesion"+err,
+            icon: "success"
+          });
 
           this.limpiarInputs();
         })

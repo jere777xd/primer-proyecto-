@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
 // importamos paqueteria de incriptacion
 import * as CryptoJS from 'crypto-js';
 
+//paqueteria de alertas personalizadas 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
@@ -61,14 +64,23 @@ export class RegistroComponent {
     const res = await this.servicioAuth.registrar(credenciales.email, credenciales.password)
     // el metodo THEN es una promesa que devuelve el mismo valor si todo sale bien 
     .then(res => {
-      alert("¡Se pudo registrar con exito!");
+      Swal.fire({
+        title: "¡buen trabajo!",
+        text: "¡se pudo registrar con exito!",
+        icon: "success"
+      });
 
       // el metodo NAVIGATE nos redirecciona a otra vista
       this.servicioRutas.navigate(['/inicio']);
     })
     // el metodo catch captura una falla y la vuelve error cuando la promesa salga mal
     .catch(error =>{
-      alert("Hubo un error al registrar un nuevo usuario \n"+error)
+      Swal.fire({
+        title: "¡ocurrio un error!",
+        text: "¡hubo un error al registrar un nuevo usuario! \n"+error,
+        icon: "success"
+      })
+      
     })
 
     //constante UID captura el identificado de la BD
@@ -94,7 +106,7 @@ export class RegistroComponent {
     //this.coleccionUsuarios.push(credenciales)
 
     //notificamos el exito al usuario
-    alert("¡Te registraste con exito!")
+    
 
     //llaman a la funcion limpiarInputs para ejecutarla
     this.limpiarInputs();

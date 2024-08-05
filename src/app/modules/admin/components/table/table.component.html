@@ -1,3 +1,4 @@
+<!-- tabla -->
 <table class="table">
     <thead>
         <tr>
@@ -11,16 +12,16 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let col of coleccionProductos">
+        <tr *ngFor="let producto of coleccionProductos">
             <th scope="row">1</th>
 
             <td>
                 <img src="{{producto.imagen}}" alt="producto.alt">
             </td>
-            <td>{{Producto.nombre}}</td>
-            <td>{{Producto.precio}}</td>
-            <td>{{Producto.Descripcion}}</td>
-            <td>{{Producto.Categoria}}</td>
+            <td>{{producto.nombre}}</td>
+            <td>{{producto.precio}}</td>
+            <td>{{producto.descripcion}}</td>
+            <td>{{producto.categoria}}</td>
 
             <!-- ACCIONES -->
              <td>
@@ -37,3 +38,67 @@
         </tr>
     </tbody>
 </table>
+
+<!-- BOTON DE AGREGAR NUEVOS PRODUCTOS -->
+<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#agregarProducto">
+    Agregar un nuevo producto
+</button>
+  
+  <!-- MODAL PARA AGREGAR NUEVOS PRODUCTOS -->
+ <div class="modal fade" id="agregarProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <!-- TITULO DEL MODAL -->
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Ingrese un nuevo producto</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- CUERPO DEL MODAL -->
+        <div [formGroup]="producto" class="modal-body">
+          <div class="mb-3">
+            <label for="form-label">Ingrese el nombre del producto</label>
+            <label for="form-control" type="text" formControlName="nombre" placeholder="Ej.: Medias"></label>
+          </div>
+
+          <div class="mb-3">
+            <label for="form-label">Ingrese el precio del producto</label>
+            <label for="form-control" type="number" formControlName="precio" placeholder="Ej.:2000"></label>
+          </div>
+
+          <div class="mb-3">
+            <label for="form-label">Ingrese la descripcion del producto</label>
+            <label for="form-control" type="text" formControlName="descripcion" placeholder="Ej.: Medias"></label>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Selecciona una categoria</label>
+            <select class="form-control" formControlName="categoria" class="form-select">
+                <option selected>Elija una opcion</option>
+                <option value="autos">Autos</option>
+                <option value="motos">Motos</option>
+                <option value="usados">Usados</option>
+                <option value="producto">productos</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="form-label">Ingrese la imagen del producto</label>
+            <label for="form-control" type="text" formControlName="imagen" placeholder="Ej.: Medias"></label>
+          </div>
+
+          <div class="mb-3">
+            <label for="form-label">Ingrese el texto alternativo a la imagen del producto</label>
+            <label for="form-control" type="text" formControlName="alt" placeholder="Ej.: Medias"></label>
+          </div>
+
+        </div>
+
+        <!-- ACCIONES DEL MODAL -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-succes" (click)="agregarProducto()" data-bs-dismiss="modal">Guardar</button>
+          <button type="button" class="btn btn-outline-secundary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+ </div>
